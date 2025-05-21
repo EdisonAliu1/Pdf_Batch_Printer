@@ -34,7 +34,7 @@ public class PdfBatchPrinter extends JFrame {
 
     public  PdfBatchPrinter() {
         setTitle("PDF Batch Print Tool For ALBI GMBH");
-        setSize(700, 500);
+        setSize(700, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initUI();
@@ -77,17 +77,21 @@ public class PdfBatchPrinter extends JFrame {
         panel.add(scrollPane, BorderLayout.CENTER);
 
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         startButton = new JButton("Start");
         stopButton = new JButton("Stop");
         stopButton.setEnabled(false);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(startButton);
         buttonPanel.add(stopButton);
-        panel.add(buttonPanel, BorderLayout.SOUTH);
-
 
         statusLabel = new JLabel("Ready");
-        panel.add(statusLabel, BorderLayout.PAGE_END);
+
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(buttonPanel, BorderLayout.NORTH);
+        bottomPanel.add(statusLabel, BorderLayout.SOUTH);
+
+        panel.add(bottomPanel, BorderLayout.SOUTH);
 
         add(panel);
 
@@ -99,6 +103,9 @@ public class PdfBatchPrinter extends JFrame {
 
     private void loadPrinters() {
         PrintService[] printers = PrintServiceLookup.lookupPrintServices(null, null);
+        if (printers.length == 0) {
+            JOptionPane.showMessageDialog(this, "No printers found on this system.", "Warning", JOptionPane.WARNING_MESSAGE);
+        }
         for (PrintService printer : printers) {
             printerComboBox.addItem(printer.getName());
         }
